@@ -1,5 +1,9 @@
 package entities;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
+
+@XmlRootElement
 public class UniteEnseignement {
     private int code;
     private String domaine;
@@ -7,8 +11,8 @@ public class UniteEnseignement {
     private int credits;
     private int semestre;
 
-    public UniteEnseignement()
-    {}
+    public UniteEnseignement() {}
+
     public UniteEnseignement(int code, String domaine, String responsable, int credits, int semestre) {
         this.code = code;
         this.domaine = domaine;
@@ -17,7 +21,6 @@ public class UniteEnseignement {
         this.semestre = semestre;
     }
 
-    // Getters et Setters
     public int getCode() {
         return code;
     }
@@ -58,5 +61,16 @@ public class UniteEnseignement {
         this.semestre = semestre;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UniteEnseignement that = (UniteEnseignement) o;
+        return code == that.code;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
+    }
 }

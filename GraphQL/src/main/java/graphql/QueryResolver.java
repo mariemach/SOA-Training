@@ -1,56 +1,81 @@
 package graphql;
 
-// Import the business logic class responsible for managing "UniteEnseignement" data
+import business.ModuleBusiness;
 import business.UniteEnseignementBusiness;
-
-// Import the GraphQL library class used to define the root of GraphQL queries
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
-
-// Import the entity class that represents a Teaching Unit (Unité d’Enseignement)
+import entities.Module;
 import entities.UniteEnseignement;
 
 import java.util.List;
 
 /**
- * This class acts as the root resolver for GraphQL queries.
- * It tells GraphQL how to fetch data when a query is executed.
- *
- * In this example, it handles queries related to "UniteEnseignement".
+ * Root Query Resolver for GraphQL operations.
+ * Exposes queries for Module and UniteEnseignement.
  */
 public class QueryResolver implements GraphQLRootResolver {
 
-    // Attribute used to call the business logic layer (service) for data operations
-    public UniteEnseignementBusiness helper;
+    private UniteEnseignementBusiness helper;
+    private ModuleBusiness moduleHelper;
+
+    public QueryResolver() {
+        helper = new UniteEnseignementBusiness();
+        moduleHelper = new ModuleBusiness();
+    }
+
+    // ==========================================
+    // Operations Query pour UniteEnseignement
+    // ==========================================
 
     /**
-     * Constructor of the resolver.
-     * It initializes the business helper that provides methods to retrieve UE data.
+     * Recuperation de toutes les unites d'enseignement
      */
-    public QueryResolver(){
-        helper = new UniteEnseignementBusiness();
+    public List<UniteEnseignement> allUEs() {
+        return helper.getListeUE();
     }
 
     /**
-     * GraphQL Query: allUEs
-     *
-     * This method will be automatically exposed to the GraphQL schema as a query named "allUEs".
-     *
-     * When a client sends the GraphQL query:
-     *
-     *    query {
-     *        allUEs {
-     *            code
-     *            domaine
-     *        }
-     *    }
-     *
-     * GraphQL will call this method to return a list of "UniteEnseignement" objects.
-     *
-     * @return List of all Teaching Units (Unité d’Enseignement)
+     * Recuperation d'une Unite d'Enseignement a partir de son code unique
      */
-    public List<UniteEnseignement> allUEs(){
-        // Delegates the request to the business layer method getListeUE()
-        // which fetches all UE entities (e.g., from a database or a static list)
-        return helper.getListeUE();
+    public UniteEnseignement getUEByCode(int code) {
+        return helper.getUEByCode(code);
+    }
+
+    /**
+     * Recuperation de toutes les Unites d'Enseignement appartenant a un domaine donne
+     */
+    public List<UniteEnseignement> getUEByDomaine(String domaine) {
+        return helper.getUEByDomaine(domaine);
+    }
+
+    /**
+     * Recuperation de toutes les Unites d'Enseignement d'un semestre donne
+     */
+    public List<UniteEnseignement> getUEBySemestre(int semestre) {
+        return helper.getUEBySemestre(semestre);
+    }
+
+    // ==========================================
+    // Operations Query pour Module
+    // ==========================================
+
+    /**
+     * Recuperation de la liste de tous les modules
+     */
+    public List<Module> allModules() {
+        return moduleHelper.getAllModules();
+    }
+
+    /**
+     * Recuperation de la liste des modules ayant un type specifique
+     */
+    public List<Module> getModulesByType(Module.TypeModule type) {
+        return moduleHelper.getModulesByType(type);
+    }
+
+    /**
+     * Recuperation d'un module ayant une matricule specifique
+     */
+    public Module getModuleByMatricule(String matricule) {
+        return moduleHelper.getModuleByMatricule(matricule);
     }
 }
